@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ereceiverdb
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  ereceiver:
+    image: docker.io.ereceiver:latest
+    container_name: ereceiver
+    volumes:
+      - /test/var/log:/var/log
+    ports:
+      - "8080:8080"
+    environment:
+      - DATA_BROKER_URL=amqp://rabbitmq
+    depends_on:
+      - rabbitmq
+
+  eprocessor:
+    image: docker.io.eprocessor:latest
+    container_name: eprocessor
+    environment:
+      - DB_HOST=db
+      - DB_USER=user
+      - DB_PASSWORD=password
+      - DB_NAME=ereceiverdb
+      - DATA_BROKER_URL=amqp://rabbitmq
+    depends_on:
+      - db
+      - rabbitmq
+
+  evalidator:
+    image: docker.io.evalidator:latest
+    container_name: evalidator
+    environment:
+      - DATA_BROKER_URL=amqp://rabbitmq
+      - VALIDATION_WINDOW_MS=60000
+    depends_on:
+      - rabbitmq
+
+volumes:
+  db_data:
