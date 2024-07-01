@@ -10,7 +10,7 @@ import logging
 from datetime import datetime
 
 # Configure logging
-logging.basicConfig(filename='/var/log/ereceiver-service.log', level=logging.ERROR,
+logging.basicConfig(filename='ereceiver-service.log', level=logging.ERROR,
                     format='%(asctime)s %(levelname)s: [ eReceiver ] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 # Define the base URL of the eReceiver service
