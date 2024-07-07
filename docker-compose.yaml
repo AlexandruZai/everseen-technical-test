@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
-      POSTGRES_DB: ereceiverdb
+      POSTGRES_DB: eprocessordb
     volumes:
       - db_data:/var/lib/postgresql/data
     ports:
@@ -39,7 +39,7 @@ services:
       - DB_HOST=db
       - DB_USER=user
       - DB_PASSWORD=password
-      - DB_NAME=ereceiverdb
+      - DB_NAME=eprocessordb
       - DATA_BROKER_URL=amqp://rabbitmq
     depends_on:
       - db
